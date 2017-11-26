@@ -1,0 +1,33 @@
+.today-info {
+    text-align: center;
+    font-size: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #888888;
+}
+
+.today-info .wendu {
+    font-size: 50px;
+}
+
+.cut-off {
+    margin: 20px 0;
+    border: 1px solid #888888;
+}
+
+.later-info {
+    margin: 0 auto;
+    font-size: 40px;
+}
+
+.later-info tbody tr {
+    line-height: 2;
+}
+
+.later-info tbody tr td {
+    text-align: center;
+}
+
+.quality {
+    padding: 10px 50px;
+    border-top: 1px solid #888888;
+}
