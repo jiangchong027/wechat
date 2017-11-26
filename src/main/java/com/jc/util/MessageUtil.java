@@ -1,17 +1,17 @@
 package com.jc.util;
 
 import com.jc.bean.message.response.*;
+import com.jc.xml.CDATAXppDriver;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.core.util.QuickWriter;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.xml.XppDriver;
 import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +23,8 @@ import java.util.Map;
  * @version 1.0
  */
 public class MessageUtil {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageUtil.class);
+
     /**
      * 请求消息类型：文本
      */
@@ -84,33 +86,39 @@ public class MessageUtil {
     public static final String RESP_MESSAGE_TYPE_NEWS = "news";
 
     /**
-     * 解析微信发来的请求（XML）
-     *
-     * @param request
-     * @return
-     * @throws Exception
+     * 扩展xstream，使其支持CDATA块
      */
-    public static Map<String, String> parseXml(HttpServletRequest request) throws Exception {
+    private static XStream xstream = new XStream(new CDATAXppDriver());
+
+    /**
+     * 解析微信发来的请求（XML）
+     * @param inputStream 流
+     * @return 解析结果map
+     */
+    public static Map<String, String> parseXml(InputStream inputStream) {
         // 将解析结果存储在HashMap中
         Map<String, String> map = new HashMap<String, String>();
 
-        // 从request中取得输入流
-        InputStream inputStream = request.getInputStream();
-        // 读取输入流
-        SAXReader reader = new SAXReader();
-        Document document = reader.read(inputStream);
-        // 得到xml根元素
-        Element root = document.getRootElement();
-        // 得到根元素的所有子节点
-        @SuppressWarnings("unchecked")
-        List<Element> elementList = root.elements();
+        try {
+            // 读取输入流
+            SAXReader reader = new SAXReader();
+            Document document = reader.read(inputStream);
+            // 得到xml根元素
+            Element root = document.getRootElement();
+            // 得到根元素的所有子节点
+            @SuppressWarnings("unchecked")
+            List<Element> elementList = root.elements();
 
-        // 遍历所有子节点
-        for (Element e : elementList)
-            map.put(e.getName(), e.getText());
+            // 遍历所有子节点
+            for (Element e : elementList)
+                map.put(e.getName(), e.getText());
 
-        // 释放资源
-        inputStream.close();
+            // 释放资源
+            inputStream.close();
+        } catch (IOException | DocumentException e) {
+            LOGGER.warn("解析XML错误!");
+            e.printStackTrace();
+        }
 
         return map;
     }
@@ -119,7 +127,7 @@ public class MessageUtil {
      * 文本消息对象转换成xml
      *
      * @param textMessage 文本消息对象
-     * @return xml
+     * @return xml字符串
      */
     public static String textMessageToXml(TextMessage textMessage) {
         xstream.alias("xml", textMessage.getClass());
@@ -130,7 +138,7 @@ public class MessageUtil {
      * 音乐消息对象转换成xml
      *
      * @param musicMessage 音乐消息对象
-     * @return xml
+     * @return xml字符串
      */
     public static String musicMessageToXml(MusicMessage musicMessage) {
         xstream.alias("xml", musicMessage.getClass());
@@ -140,7 +148,7 @@ public class MessageUtil {
     /**
      * 图文消息对象转换成xml
      * @param newsMessage 图文消息对象
-     * @return xml
+     * @return xml字符串
      */
     public static String newsMessageToXml(NewsMessage newsMessage) {
         xstream.alias("xml", newsMessage.getClass());
@@ -150,8 +158,8 @@ public class MessageUtil {
 
     /**
      * 图片消息对象转换成xml
-     * @param imageMessage
-     * @return
+     * @param imageMessage 图片消息对象
+     * @return xml字符串
      */
     public static String imageMessageToXml(ImageMessage imageMessage) {
         xstream.alias("xml", imageMessage.getClass());
@@ -160,8 +168,8 @@ public class MessageUtil {
 
     /**
      * 语音消息对象转换成xml
-     * @param voiceMessage
-     * @return
+     * @param voiceMessage 语音消息对象
+     * @return xml字符串
      */
     public static String voiceMessageToXml(VoiceMessage voiceMessage) {
         xstream.alias("xml", voiceMessage.getClass());
@@ -170,34 +178,11 @@ public class MessageUtil {
 
     /**
      * 视频消息对象转换成xml
-     * @param videoMessage
-     * @return
+     * @param videoMessage 视频消息对象
+     * @return xml字符串
      */
     public static String videoMessageToXml(VideoMessage videoMessage) {
         xstream.alias("xml", videoMessage.getClass());
         return xstream.toXML(videoMessage);
     }
-
-    /**
-     * 扩展xstream，使其支持CDATA块
-     */
-    private static XStream xstream = new XStream(new XppDriver() {
-        @Override
-        public HierarchicalStreamWriter createWriter(Writer out) {
-            return new com.thoughtworks.xstream.io.xml.PrettyPrintWriter(out) {
-                // 对所有xml节点的转换都增加CDATA标记
-                @Override
-                public void startNode(String name, Class clazz) {
-                    super.startNode(name, clazz);
-                }
-
-                @Override
-                protected void writeText(QuickWriter writer, String text) {
-                    writer.write("<![CDATA[");
-                    writer.write(text);
-                    writer.write("]]>");
-                }
-            };
-        }
-    });
 }

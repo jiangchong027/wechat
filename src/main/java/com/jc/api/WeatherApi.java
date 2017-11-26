@@ -14,7 +14,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 
 /**
- *
+ * 天气查询接口
  * @author jiangchong
  * @since 2017/11/25 18:58
  * @version 1.0

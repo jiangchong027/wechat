@@ -52,4 +52,8 @@ public class TulinApi {
 
         return (String) map.get("text");
     }
+
+    public static void main(String[] args) {
+        new TulinApi().getResult("你叫啥");
+    }
 }

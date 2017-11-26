@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- *
+ * 用户请求处理
  * @author jiangchong
  * @since 2017/11/25 20:12
  * @version 1.0
@@ -25,6 +25,11 @@ public class HandlerService {
     @Autowired
     private ResponseService responseService;
 
+    /**
+     * 处理文本类型请求
+     * @param requsetParams 请求参数
+     * @return xml字符串
+     */
     public String handlerText(Map<String, String> requsetParams) {
         String content = requsetParams.get("Content");
 
@@ -38,6 +43,11 @@ public class HandlerService {
         return responseService.responseText(requsetParams, result);
     }
 
+    /**
+     * 处理语音类型请求
+     * @param requsetParams 请求参数
+     * @return xml字符串
+     */
     public String handlerVoice(Map<String, String> requsetParams) {
         try {
             String recognition = requsetParams.get("Recognition");
@@ -57,18 +67,38 @@ public class HandlerService {
         }
     }
 
+    /**
+     * 处理图片类型请求
+     * @param requsetParams 请求参数
+     * @return xml字符串
+     */
     public String handlerImage(Map<String, String> requsetParams) {
         return responseService.responseNews(requsetParams);
     }
 
+    /**
+     * 处理链接类型请求
+     * @param requsetParams 请求参数
+     * @return xml字符串
+     */
     public String handlerLink(Map<String, String> requsetParams) {
         return null;
     }
 
+    /**
+     * 处理地理位置类型请求
+     * @param requsetParams 请求参数
+     * @return xml字符串
+     */
     public String handlerLocation(Map<String, String> requsetParams) {
         return null;
     }
 
+    /**
+     * 处理事件类型请求
+     * @param requsetParams 请求参数
+     * @return xml字符串
+     */
     public String handlerEvent(Map<String, String> requsetParams) {
         if (MessageUtil.EVENT_TYPE_SUBSCRIBE.equals((String) requsetParams.get("Event"))) {
             return subscribe(requsetParams);
@@ -78,10 +108,20 @@ public class HandlerService {
         return null;
     }
 
+    /**
+     * 订阅事件
+     * @param requsetParams 请求参数
+     * @return xml字符串
+     */
     private String subscribe(Map<String, String> requsetParams) {
         return responseService.responseText(requsetParams, "感谢您的订阅!");
     }
 
+    /**
+     * 退订事件
+     * @param requsetParams 请求参数
+     * @return xml字符串
+     */
     private void unSubscribe(Map<String, String> requsetParams) {
 
     }

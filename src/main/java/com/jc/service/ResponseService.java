@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 消息回复
+ * 消息回复处理
  * @author jiangchong
  * @since 2017/11/25 20:39
  * @version 1.0
@@ -26,6 +26,12 @@ public class ResponseService {
     @Autowired
     private WeatherApi weatherApi;
 
+    /**
+     * 回复文本类型
+     * @param requestParams 请求参数
+     * @param content 回复内容
+     * @return xml字符串
+     */
     public String responseText(Map<String, String> requestParams, String content) {
         TextMessage message = new TextMessage();
 
@@ -42,6 +48,11 @@ public class ResponseService {
         return MessageUtil.textMessageToXml(message);
     }
 
+    /**
+     * 回复图文类型
+     * @param requestParams 请求参数
+     * @return xml字符串
+     */
     public String responseNews(Map<String, String> requestParams) {
         NewsMessage message = new NewsMessage();
 
@@ -69,6 +80,12 @@ public class ResponseService {
         return MessageUtil.newsMessageToXml(message);
     }
 
+    /**
+     * 回复天气查询
+     * @param requestParams 请求参数
+     * @param city 城市名
+     * @return xml字符串
+     */
     public String responseWeather(Map<String, String> requestParams, String city) {
         Weather weather = weatherApi.getWeather(city);
         WeatherData weatherData = weather.getData();

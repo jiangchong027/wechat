@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 /**
- *
+ * 微信请求处理
  * @author jiangchong
  * @since 2017/11/25 16:24
  * @version 1.0
@@ -28,14 +30,33 @@ public class WeixinController {
     @Autowired
     private HandlerService handler;
 
+    /**
+     * 微信验证: 由微信调用验证服务器是否有效
+     * @param signature 签名
+     * @param timestamp 时间戳
+     * @param nonce 随机数
+     * @param echostr 回应字符串
+     * @return 回应字符串
+     */
     @RequestMapping(value = "request", method = RequestMethod.GET)
     public String validate(String signature, String timestamp, String nonce, String echostr) {
         return echostr;
     }
 
+    /**
+     * 处理用户请求
+     * @param request 请求
+     * @return xml字符串
+     */
     @RequestMapping(value = "request", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
-    public String processRequest(HttpServletRequest request) throws Exception {
-        Map<String, String> requsetParams = MessageUtil.parseXml(request);
+    public String processRequest(HttpServletRequest request) {
+        InputStream inputStream = null;
+        try {
+            inputStream = request.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Map<String, String> requsetParams = MessageUtil.parseXml(inputStream);
 
         LOGGER.info(new Gson().toJson(requsetParams, Map.class));
 
