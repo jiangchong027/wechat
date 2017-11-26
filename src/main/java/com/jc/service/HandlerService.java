@@ -114,7 +114,7 @@ public class HandlerService {
      * @return xml字符串
      */
     private String subscribe(Map<String, String> requsetParams) {
-        return responseService.responseText(requsetParams, "感谢您的订阅!");
+        return responseService.responseText(requsetParams, "感谢您的订阅!\r\n查询天气: 长沙市天气.\r\n其余都是和机器人聊天.\r\n支持文字和语音.");
     }
 
     /**
