@@ -1,3 +1,3 @@
 # wechat
-####微信公众号: 54271523
-![二维码](https://mp.weixin.qq.com/misc/getqrcode?fakeid=3284752043&token=64503780&style=1)
+#### 微信公众号: 54271523
+![](https://mp.weixin.qq.com/misc/getqrcode?fakeid=3284752043&token=64503780&style=1)
