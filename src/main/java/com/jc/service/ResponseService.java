@@ -66,7 +66,7 @@ public class ResponseService {
 
         Article article = new Article();
         article.setTitle("Title");
-        article.setPicUrl("http://2afxu2.natappfree.cc/image/0.jpg");
+        article.setPicUrl("http://120.79.7.142/wechat/image/0.jpg");
         article.setDescription("Description1");
         article.setUrl("https://github.com/jiangchong027");
 
@@ -110,7 +110,7 @@ public class ResponseService {
         Article article = new Article();
         article.setTitle(city + "今日天气");
         article.setDescription(sb.toString());
-        article.setPicUrl("http://2afxu2.natappfree.cc/image/0.jpg");
+        article.setPicUrl("http://120.79.7.142/wechat/image/0.jpg");
         article.setUrl("https://github.com/jiangchong027");
 
         List<Article> list = new ArrayList<>();
